@@ -4,6 +4,7 @@ const repo = require('./repository.js');
 
 let cityId = null; //'68bed560406ff1292b670688';
 let cinemaId = null; //'68bed560406ff1292b670685';
+let movieId = null; //'68bed560406ff1292b670681';
 
 beforeAll(async () => {
     // require('dotenv').config();
@@ -14,6 +15,10 @@ beforeAll(async () => {
     const cinemaList = await repo.getCinemasByCityId(cityId);
     cinemaId = cinemaList[0]._id.toString(); // toString() para converter ObjectId em string
     console.log('cinemaId:', cinemaId);
+
+    const movieList = await repo.getMoviesByCinemaId(cinemaId);
+    movieId = movieList[0].idFilme.toString();
+    console.log('movieId:', movieId);
 });
 
 test('Get all cities', async () => {
@@ -34,4 +39,11 @@ test('Get movies by cinema id', async () => {
     const movies = await repo.getMoviesByCinemaId(cinemaId);
     console.log('test result:', movies);
     expect(movies).toBeDefined();
+});
+
+test('Get Sessions by cinema id', async () => {
+    // const cinemaId = '68bed560406ff1292b670685';
+    const sessions = await repo.getSessionsByCinemaId(movieId, cinemaId);
+    console.log('test result:', sessions);
+    expect(sessions).toBeDefined();
 });

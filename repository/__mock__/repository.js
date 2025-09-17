@@ -1,4 +1,6 @@
-const cinemas = [{
+const { ObjectId } = require("mongodb");
+
+const cinemaCatalog = [{
     "cidade": "Gravataí",
     "uf": "RS",
     "cinemas": []
@@ -142,3 +144,31 @@ const cinemas = [{
         }]
     }]
 }]
+
+function getCities() {
+    return cinemaCatalog.map(item => ({
+        _id: ObjectId(),
+        cidade: item.cidade,
+        uf: item.uf,
+        pais: item.pais
+    }));
+}
+
+async function getCinemasByCityId(cityId) {
+    return cinemaCatalog[cinemaCatalog.length - 1].cinemas; // sempre retorna os cinemas da última cidade do array
+}
+
+function getMoviesByCinemaId(cinemaId) {
+    return getCinemasByCityId().map(cinema => {
+        return {
+            idFilme: cinema.salas[0].sessoes[0].idFilme,
+            filme: cinema.salas[0].sessoes[0].filme
+        }
+    })
+}
+
+async function getSessionsByCinemaId(movieId, cinemaId) {
+    return getCinemasByCityId().map(cinema => {
+        return cinema.salas[0].sessoes;
+    });
+}

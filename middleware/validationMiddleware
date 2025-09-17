@@ -1,0 +1,21 @@
+const Joi = require('joi');
+
+const validateMovie = (req, res, next) => {
+    const schema = Joi.object({
+        titulo: Joi.string().min(2).required(),
+        duracao: Joi.number().integer().min(1).required(),
+        sinopse: Joi.string().min(25).required(),
+        dataLancamento: Joi.date().required(),
+        imagem: Joi.string().uri().required()
+    });
+
+    const { error } = schema.validate(req.body);
+    if (error) {
+        return res.status(400).json({ error: error.details[0].message });
+    }
+    next();
+}
+
+module.exports = {
+    validateMovie
+};

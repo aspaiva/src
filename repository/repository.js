@@ -21,7 +21,10 @@ async function getCinemasByCityId(cityId) {
         .catch(err => {
             console.error('Error fetching cinemas by city ID:', err);
         });
-    return result.cinemas;
+    return result.cinemas.map(cinema => ({
+        id: cinema._id,
+        nome: cinema.nome
+    }));
 }
 
 function getMoviesByCinemaId(cinemaId) {
@@ -47,4 +50,45 @@ function getMoviesByCinemaId(cinemaId) {
         });
 }
 
-module.exports = { getCities, getCinemasByCityId, getMoviesByCinemaId };
+async function getSessionsByCinemaId(movieId, cinemaId) {
+    const objCinemaId = ObjectId.createFromHexString(cinemaId);
+    const objMovieId = ObjectId.createFromHexString(movieId);
+    let result = null;
+
+    const db = await database.connect();
+    result = await db.collection(process.env.DB_COLLECTION)
+        .aggregate([
+            { $match: { 'cinemas._id': objCinemaId } },
+            { $match: { 'cinemas.salas.sessoes.idFilme': objMovieId } },
+            { $unwind: '$cinemas' }, // Desestrutura o array de cinemas, tornando cada cinema um documento separado, flat
+            { $unwind: '$cinemas.salas' }, // Desestrutura o array de salas dentro de cada cinema
+            { $unwind: '$cinemas.salas.sessoes' }, // Desestrutura o array de sessões dentro de cada sala
+            {
+                $group: {
+                    _id: {
+                        titulo: "$cinemas.salas.sessoes.filme",
+                        idCinema: "$cinemas._id",
+                        nomeCinema: "$cinemas.nome",
+                        idSala: "$cinemas.salas._id",
+                        Sala: "$cinemas.salas.nome",
+                        sessoes: "$cinemas.salas.sessoes"
+                    }
+                }
+            }])
+        .toArray();
+
+    console.log('repo result', result);
+
+    return result.map(item => item._id); // Retorna apenas o campo _id de cada item no array, ocultando o _id do $group no retorno
+}
+
+async function addMovie(movie) {
+    return database.connect().then(async db => {
+        return await db.collection('movies').insertOne(movie);
+    });
+}
+
+module.exports = {
+    getCities, getCinemasByCityId, getMoviesByCinemaId, getSessionsByCinemaId,
+    addMovie
+};
