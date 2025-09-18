@@ -33,4 +33,18 @@ module.exports = (app, repository) => {
             res.status(500).json({ error: 'Internal Server Error' });
         }
     });
+
+    app.delete('/movie/:movieId', async (req, res) => {
+        const movieId = req.params.movieId;
+        try {
+            const result = await repository.deleteMovie(movieId);
+            if (result.deletedCount === 0) {
+                return res.status(404).json({ error: 'Movie not found' });
+            }
+            res.status(200).json({ message: 'Movie deleted successfully' });
+        } catch (error) {
+            console.error('Error deleting movie:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    });
 }

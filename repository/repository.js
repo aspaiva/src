@@ -88,7 +88,13 @@ async function addMovie(movie) {
     });
 }
 
+async function deleteMovie(movieId) {
+    const objMovieId = ObjectId.createFromHexString(movieId);
+    const db = await database.connect(null, "movies-service");
+    return await db.collection('movies').deleteOne({ _id: objMovieId });
+}
+
 module.exports = {
     getCities, getCinemasByCityId, getMoviesByCinemaId, getSessionsByCinemaId,
-    addMovie
+    addMovie, deleteMovie
 };
