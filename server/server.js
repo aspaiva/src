@@ -10,7 +10,7 @@ async function startServer(api, repository) {
     // Middleware
     app.use(morgan('dev'));
     app.use(helmet());
-    app.use(express.json());  // For parsing application/json and body-parser is deprecated
+    // app.use(express.json());  // For parsing application/json and body-parser is deprecated
 
     // Simple route for testing
     app.get('/', (req, res) => {
