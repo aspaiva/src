@@ -16,6 +16,19 @@ const validateMovie = (req, res, next) => {
     next();
 }
 
+const validateCinema = (req, res, next) => {
+    const schema = Joi.object({
+        nome: Joi.string().min(2).required(),
+        cidadeId: Joi.string().min(4).required()
+    });
+    
+    const { error } = schema.validate(req.body);
+    if (error) {
+        return res.status(400).json({ error: error.details[0].message });
+    }   
+    next();
+}
+
 module.exports = {
     validateMovie
 };
