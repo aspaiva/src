@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.34% </span>
+                <span class="strong">87% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>79/82</span>
+                <span class='fraction'>87/100</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>9/9</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">66.66% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>4/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.34% </span>
+                <span class="strong">87% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>79/82</span>
+                <span class='fraction'>87/100</span>
             </div>
         
             
@@ -144,7 +144,25 @@
 <a name='L79'></a><a href='#L79'>79</a>
 <a name='L80'></a><a href='#L80'>80</a>
 <a name='L81'></a><a href='#L81'>81</a>
-<a name='L82'></a><a href='#L82'>82</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -168,6 +186,9 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -221,6 +242,21 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -248,7 +284,10 @@ async function getCinemasByCityId(cityId) {
         .catch(err =&gt; {
 <span class="cstat-no" title="statement not covered" >            console.error('Error fetching cinemas by city ID:', err);</span>
         });
-    return result.cinemas;
+    return result.cinemas.map(cinema =&gt; ({
+        id: cinema._id,
+        nome: cinema.nome
+    }));
 }
 &nbsp;
 function getMoviesByCinemaId(cinemaId) {
@@ -306,14 +345,29 @@ async function getSessionsByCinemaId(movieId, cinemaId) {
     return result.map(item =&gt; item._id); // Retorna apenas o campo _id de cada item no array, ocultando o _id do $group no retorno
 }
 &nbsp;
-module.exports = { getCities, getCinemasByCityId, getMoviesByCinemaId, getSessionsByCinemaId };</pre></td></tr></table></pre>
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >async function addMovie(movie) {</span></span>
+<span class="cstat-no" title="statement not covered" >    return database.connect().then(async db =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        return await db.collection('movies').insertOne(movie);</span>
+<span class="cstat-no" title="statement not covered" >    });</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >async function deleteMovie(movieId) {</span></span>
+<span class="cstat-no" title="statement not covered" >    const objMovieId = ObjectId.createFromHexString(movieId);</span>
+<span class="cstat-no" title="statement not covered" >    const db = await database.connect(null, "movies-service");</span>
+<span class="cstat-no" title="statement not covered" >    return await db.collection('movies').deleteOne({ _id: objMovieId });</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+module.exports = {
+    getCities, getCinemasByCityId, getMoviesByCinemaId, getSessionsByCinemaId,
+    addMovie, deleteMovie
+};</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-17T14:24:44.369Z
+                at 2025-09-30T22:24:19.068Z
             </div>
         <script src="../prettify.js"></script>
         <script>

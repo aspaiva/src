@@ -1,20 +1,26 @@
 const express = require('express');
 const morgan = require('morgan');
 const helmet = require('helmet');
+const logger = require('../config/logger');
 
 let theServer = null;
 
 async function startServer(api, repository) {
     const app = express();
+    const PORT = process.env.PORT || 3000;
 
     // Middleware
     app.use(morgan('dev'));
     app.use(helmet());
-    // app.use(express.json());  // For parsing application/json and body-parser is deprecated
+    app.use(express.json());  // For parsing application/json and body-parser is deprecated
 
     // Simple route for testing
     app.get('/', (req, res) => {
-        res.send('Server is running');
+        res.send(`Server is running on port ${PORT}`);
+    });
+
+    app.get('/status', (req, res) => {
+        res.status(200).send('OK');
     });
     
     // api == movies.js (no primeiro exemplo, mas pode variar conforme o microsserviço)
@@ -23,17 +29,14 @@ async function startServer(api, repository) {
     // repository é a interface de acesso a dados, que pode variar conforme o microsserviço
     api(app, repository); 
 
-    const PORT = process.env.PORT || 3000;
     theServer = app.listen(PORT, () => {
         console.log(`Server ${process.env.MICROSSERVICE_NAME} running on port ${PORT}`);
     });
 
     // Middleware for error handling
     app.use((err, req, res, next) => {
-        // console.error(err.stack); 
-        console.error(err);
+        logger.error(err.stack);        
         res.status(500).send('Something broke!');
-        // res.sendStatus(500);
     });
 
     return app;

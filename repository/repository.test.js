@@ -1,6 +1,7 @@
 // const db = require('../config/database.js');
 const { test, expect, beforeAll } = require('@jest/globals');
 const repo = require('./repository.js');
+const { ObjectId } = require('mongodb');
 
 let cityId = null; //'68bed560406ff1292b670688';
 let cinemaId = null; //'68bed560406ff1292b670685';
@@ -13,7 +14,8 @@ beforeAll(async () => {
     console.log('cityId:', cityId);
 
     const cinemaList = await repo.getCinemasByCityId(cityId);
-    cinemaId = cinemaList[0]._id.toString(); // toString() para converter ObjectId em string
+    console.log('cinemaList:', cinemaList);
+    cinemaId = cinemaList[0].id.toString(); // toString() para converter ObjectId em string
     console.log('cinemaId:', cinemaId);
 
     const movieList = await repo.getMoviesByCinemaId(cinemaId);
